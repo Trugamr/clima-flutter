@@ -32,7 +32,7 @@ class LocationScreen extends StatelessWidget {
     if (fullLocation != null) {
       List temp = fullLocation.split(',');
       temp.removeAt(0);
-      fullLocation = temp.join().trim();
+      fullLocation = temp.join(',').trim();
     }
 
     DateTime date = new DateTime.fromMillisecondsSinceEpoch(

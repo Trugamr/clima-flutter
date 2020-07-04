@@ -1,3 +1,4 @@
+import 'package:clima/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../services/location.dart';
@@ -21,10 +22,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future getLocationData() async {
     Location location = Location();
     await location.getCurrentLocation();
-    setState(() {
-      text =
-          location.latitude.toString() + ' , ' + location.longitude.toString();
-    });
+    print(location.latitude.toString() + ' , ' + location.longitude.toString());
     latitude = location.latitude;
     longitude = location.longitude;
 
@@ -42,7 +40,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Text(text),
+          child: CircularProgressIndicator(
+            strokeWidth: 6.0,
+            valueColor: AlwaysStoppedAnimation(kTextColor),
+          ),
         ),
       ),
     );
