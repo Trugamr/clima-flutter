@@ -43,13 +43,13 @@ class LocationScreen extends StatelessWidget {
                   fontSize: 18.0,
                 ),
               ),
-
               // current temp
               Text(
                 '13°',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
                   fontSize: 240.0,
+                  fontFamily: 'Montserrat',
                 ),
               ),
               // status & min - max temp
