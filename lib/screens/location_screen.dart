@@ -1,11 +1,12 @@
 import 'package:clima/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class LocationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map args = ModalRoute.of(context).settings.arguments;
-    Map weatherData;
+    Map weatherData = {};
 
     try {
       if (args != null) {
@@ -15,22 +16,50 @@ class LocationScreen extends StatelessWidget {
       print(e);
     }
 
+    String location = weatherData['text'];
+    String fullLocation = weatherData['placeName'];
+    int currentTemp = weatherData['currently']['temperature'].round();
+    String summary = weatherData['forecast'];
+    String smallSummary = weatherData['currently']['summary'];
+    String tempLow =
+        weatherData['daily']['data'][0]['temperatureLow'].round().toString();
+    String tempHigh =
+        weatherData['daily']['data'][0]['temperatureHigh'].round().toString();
+    String precipProbability =
+        (weatherData['currently']['precipProbability'] * 100).toString();
+    String windSpeed = weatherData['currently']['windSpeed'].toStringAsFixed(1);
+
+    if (fullLocation != null) {
+      List temp = fullLocation.split(',');
+      temp.removeAt(0);
+      fullLocation = temp.join().trim();
+    }
+
+    DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+        weatherData['currently']['time'] * 1000);
+
+    String formattedDate = new DateFormat('EEEE - MMMM d').format(date);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // location
-              SizedBox(
-                height: 100.0,
-              ),
               Text(
-                'London',
+                location,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 22.0,
+                ),
+              ),
+              Text(
+                fullLocation,
+                style: TextStyle(
+                  fontSize: 15.0,
                 ),
               ),
               SizedBox(
@@ -38,33 +67,47 @@ class LocationScreen extends StatelessWidget {
               ),
               // date
               Text(
-                'Wednesday - 29th May',
+                formattedDate,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
               ),
               // current temp
-              Text(
-                '13°',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 240.0,
-                  fontFamily: 'Montserrat',
-                ),
+              Row(
+                textBaseline: TextBaseline.ideographic,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    currentTemp.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 170.0,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                  Text(
+                    '°',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 110.0,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ],
               ),
               // status & min - max temp
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Yes. It\'s Raining',
+                    smallSummary,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,
                     ),
                   ),
                   Text(
-                    '11° - 17°',
+                    '$tempLow° - $tempHigh°',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,
@@ -80,13 +123,13 @@ class LocationScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Wind: 16km/h',
+                    'Wind: ${windSpeed}km/h',
                     style: TextStyle(
                       fontSize: 15.0,
                     ),
                   ),
                   Text(
-                    'Precipitation: 55%',
+                    'Precipitation: $precipProbability%',
                     style: TextStyle(
                       fontSize: 15.0,
                     ),
@@ -110,7 +153,7 @@ class LocationScreen extends StatelessWidget {
                 margin: EdgeInsets.symmetric(vertical: 10.0),
               ),
               Text(
-                'Humid throughout the day. Is\'s currenty 37.45 degrees out. There is a 0.0% chance of rain.',
+                summary,
                 style: TextStyle(
                   fontSize: 17.0,
                 ),

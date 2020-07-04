@@ -11,8 +11,11 @@ void main() {
     MaterialApp(
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: kBackgroundColor,
+        textTheme: TextTheme(
+          bodyText2: TextStyle(color: kTextColor),
+        ),
       ),
-      initialRoute: '/location',
+      initialRoute: '/loading',
       routes: {
         '/loading': (context) => LoadingScreen(),
         '/city': (context) => CityScreen(),
