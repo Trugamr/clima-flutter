@@ -1,8 +1,14 @@
 import 'package:clima/constants.dart';
+import 'package:clima/services/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class LocationScreen extends StatelessWidget {
+class LocationScreen extends StatefulWidget {
+  @override
+  _LocationScreenState createState() => _LocationScreenState();
+}
+
+class _LocationScreenState extends State<LocationScreen> {
   @override
   Widget build(BuildContext context) {
     final Map args = ModalRoute.of(context).settings.arguments;
@@ -41,6 +47,32 @@ class LocationScreen extends StatelessWidget {
     String formattedDate = new DateFormat('EEEE - MMMM d').format(date);
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        titleSpacing: 0.0,
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            GestureDetector(
+              onTap: () async {
+                var data = await Weather().getLocationWeather();
+                setState(() {
+                  weatherData = data;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                child: Icon(
+                  Icons.refresh,
+                  color: kTextColor,
+                  size: 32.0,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -158,6 +190,9 @@ class LocationScreen extends StatelessWidget {
                   fontSize: 17.0,
                 ),
                 textAlign: TextAlign.left,
+              ),
+              SizedBox(
+                height: 60.0,
               ),
             ],
           ),

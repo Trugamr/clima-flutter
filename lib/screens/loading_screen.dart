@@ -1,8 +1,7 @@
 import 'package:clima/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../services/location.dart';
-import '../services/networking.dart';
+import '../services/weather.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -10,9 +9,6 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  String text = 'Position Here';
-  double latitude, longitude;
-
   @override
   void initState() {
     super.initState();
@@ -20,15 +16,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future getLocationData() async {
-    Location location = Location();
-    await location.getCurrentLocation();
-    print(location.latitude.toString() + ' , ' + location.longitude.toString());
-    latitude = location.latitude;
-    longitude = location.longitude;
-
-    NetworkHelper networkHelper = NetworkHelper(
-        'http://tru-weather-api.herokuapp.com/weather?latitude=$latitude&longitude=$longitude');
-    var weatherData = await networkHelper.getData();
+    Map weatherData = await Weather().getLocationWeather();
 
     Navigator.pushNamed(context, '/location', arguments: {
       "weatherData": weatherData,
