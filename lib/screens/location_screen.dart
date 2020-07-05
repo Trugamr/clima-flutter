@@ -9,43 +9,64 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
+  String location;
+  String fullLocation;
+  int currentTemp;
+  String summary;
+  String smallSummary;
+  String tempLow;
+  String tempHigh;
+  String precipProbability;
+  String windSpeed;
+  DateTime date;
+  String formattedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    // future that allows us to access context. function is called inside the future
+    // otherwise it would be skipped and args would return null
+    Future.delayed(Duration.zero, () {
+      final Map args = ModalRoute.of(context).settings.arguments;
+      try {
+        if (args != null) {
+          updateUI(args['weatherData']);
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
+  }
+
+  void updateUI(dynamic weatherData) {
+    setState(() {
+      location = weatherData['text'];
+      fullLocation = weatherData['placeName'];
+      currentTemp = weatherData['currently']['temperature'].round();
+      summary = weatherData['forecast'];
+      smallSummary = weatherData['currently']['summary'];
+      tempLow =
+          weatherData['daily']['data'][0]['temperatureLow'].round().toString();
+      tempHigh =
+          weatherData['daily']['data'][0]['temperatureHigh'].round().toString();
+      precipProbability =
+          (weatherData['currently']['precipProbability'] * 100).toString();
+      windSpeed = weatherData['currently']['windSpeed'].toStringAsFixed(1);
+
+      if (fullLocation != null) {
+        List temp = fullLocation.split(',');
+        temp.removeAt(0);
+        fullLocation = temp.join(',').trim();
+      }
+
+      date = new DateTime.fromMillisecondsSinceEpoch(
+          weatherData['currently']['time'] * 1000);
+      formattedDate = new DateFormat('EEEE - MMMM d').format(date);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Map args = ModalRoute.of(context).settings.arguments;
-    Map weatherData = {};
-
-    try {
-      if (args != null) {
-        weatherData = args['weatherData'];
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    String location = weatherData['text'];
-    String fullLocation = weatherData['placeName'];
-    int currentTemp = weatherData['currently']['temperature'].round();
-    String summary = weatherData['forecast'];
-    String smallSummary = weatherData['currently']['summary'];
-    String tempLow =
-        weatherData['daily']['data'][0]['temperatureLow'].round().toString();
-    String tempHigh =
-        weatherData['daily']['data'][0]['temperatureHigh'].round().toString();
-    String precipProbability =
-        (weatherData['currently']['precipProbability'] * 100).toString();
-    String windSpeed = weatherData['currently']['windSpeed'].toStringAsFixed(1);
-
-    if (fullLocation != null) {
-      List temp = fullLocation.split(',');
-      temp.removeAt(0);
-      fullLocation = temp.join(',').trim();
-    }
-
-    DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-        weatherData['currently']['time'] * 1000);
-
-    String formattedDate = new DateFormat('EEEE - MMMM d').format(date);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -56,10 +77,9 @@ class _LocationScreenState extends State<LocationScreen> {
           children: [
             GestureDetector(
               onTap: () async {
-                var data = await Weather().getLocationWeather();
-                setState(() {
-                  weatherData = data;
-                });
+                var weatherData = await Weather().getLocationWeather();
+
+                updateUI(weatherData);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.0),
