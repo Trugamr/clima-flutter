@@ -14,4 +14,10 @@ class Weather {
     var weatherData = await networkHelper.getData();
     return weatherData;
   }
+
+  Future<Map> getCityWeather(String city) async {
+    NetworkHelper networkHelper = NetworkHelper('$BASE_URL?search=$city');
+    var weatherData = await networkHelper.getData();
+    return weatherData;
+  }
 }

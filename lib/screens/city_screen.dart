@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:clima/constants.dart';
 
 class CityScreen extends StatelessWidget {
+  String cityName;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +37,7 @@ class CityScreen extends StatelessWidget {
             Theme(
               data: ThemeData().copyWith(),
               child: TextField(
-                onChanged: (val) => print(val),
+                onChanged: (val) => cityName = val,
                 style: TextStyle(
                   color: kTextColor,
                   fontSize: 18.0,
@@ -65,7 +67,9 @@ class CityScreen extends StatelessWidget {
               width: double.infinity,
               height: 45.0,
               child: RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context, cityName);
+                },
                 color: kTextColor,
                 child: Text('GET WEATHER'),
               ),

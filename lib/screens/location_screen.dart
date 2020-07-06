@@ -90,11 +90,17 @@ class _LocationScreenState extends State<LocationScreen> {
             ),
             GestureDetector(
               onTap: () async {
-                Navigator.of(context).push(
+                var typedName = await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => CityScreen(),
                   ),
                 );
+
+                if (typedName != null) {
+                  print(typedName);
+                  var weatherData = await Weather().getCityWeather(typedName);
+                  updateUI(weatherData);
+                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.0),
