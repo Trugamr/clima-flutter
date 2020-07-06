@@ -1,4 +1,5 @@
 import 'package:clima/constants.dart';
+import 'package:clima/screens/city_screen.dart';
 import 'package:clima/services/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -70,6 +71,7 @@ class _LocationScreenState extends State<LocationScreen> {
         titleSpacing: 0.0,
         automaticallyImplyLeading: false,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
               onTap: () async {
@@ -81,6 +83,23 @@ class _LocationScreenState extends State<LocationScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 12.0),
                 child: Icon(
                   Icons.refresh,
+                  color: kTextColor,
+                  size: 32.0,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CityScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                child: Icon(
+                  Icons.search,
                   color: kTextColor,
                   size: 32.0,
                 ),
