@@ -1,6 +1,8 @@
 import 'package:clima/constants.dart';
 import 'package:flutter/material.dart';
 
+import "./location_screen.dart";
+
 import '../services/weather.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -18,9 +20,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future getLocationData() async {
     Map weatherData = await Weather().getLocationWeather();
 
-    Navigator.pushNamed(context, '/location', arguments: {
-      "weatherData": weatherData,
-    });
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => LocationScreen(data: weatherData)));
   }
 
   @override

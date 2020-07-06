@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class LocationScreen extends StatefulWidget {
+  LocationScreen({this.data});
+  final data;
+
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
@@ -24,18 +27,11 @@ class _LocationScreenState extends State<LocationScreen> {
   @override
   void initState() {
     super.initState();
-    // future that allows us to access context. function is called inside the future
-    // otherwise it would be skipped and args would return null
-    Future.delayed(Duration.zero, () {
-      final Map args = ModalRoute.of(context).settings.arguments;
-      try {
-        if (args != null) {
-          updateUI(args['weatherData']);
-        }
-      } catch (e) {
-        print(e);
-      }
-    });
+    if (widget.data != null) {
+      updateUI(widget.data);
+    } else {
+      print('No data receieved');
+    }
   }
 
   void updateUI(dynamic weatherData) {
